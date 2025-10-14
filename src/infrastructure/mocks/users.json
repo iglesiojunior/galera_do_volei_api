@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "nome": "Rogerio Silva",
+    "email": "rogeriosilva@gmail.com",
+    "senha": "bolodemaracuja",
+    "sexo": "masculino",
+    "categoria": "profissional"
+  },
+  {
+    "id": 2,
+    "nome": "Iglesio",
+    "email": "iglesio@gmail.com",
+    "senha": "123456",
+    "sexo": "masculino",
+    "categoria": "amador"
+  }
+]

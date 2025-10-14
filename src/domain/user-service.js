@@ -103,3 +103,6 @@ export function getMatchById(id) {
     const numericId = Number(id);
     return partidasMock.find((p) => p.id === numericId);
 }
+
+// export function updateMatch(id, updates) {
+    
