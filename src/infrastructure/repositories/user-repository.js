@@ -1,4 +1,4 @@
-import dadosMock from '../../infrastructure/mocks/users.json' ;
+import dadosMock from '../../infrastructure/mocks/users.json' with { type: 'json' } ;
 
 export class UserRepository {
     constructor() {
