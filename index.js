@@ -1,26 +1,22 @@
 import fastify from "fastify";
 import { registroSchema, loginSchema, partidaSchema, conviteSchema } from "./schemas.js";
 import { registerUser, loginUser, listUsers, listAllUsers, createMatch, listMatches, getMatchById } from "./src/domain/user-service.js";
+import { RegisterUserUseCase } from "./src/application/use-cases/RegisterUserUseCase.js";
+import { UserRepository } from "./src/infrastructure/repositories/user-repository.js";
+import { UserController } from "./src/presentation/controllers/user-controller.js";
 
 const convitesMock = [
     { id: 1, partidaId: 1, jogadorConvidadoId: 2, paiId: 1, status: 'pendente' }
 ];
 
+const userRepository = new UserRepository();
+const registerUserUseCase = new RegisterUserUseCase(userRepository);
+const userController = new UserController(registerUserUseCase);
 
 const app = fastify({ logger: true });
 
 // Rota de registro de usuário
-app.post('/register', { schema: registroSchema }, async (request, reply) => {
-    try {
-        const novoUsuario = registerUser(request.body);
-        return reply.code(201).send({ message: 'Usuário registrado com sucesso!', user: novoUsuario });
-    } catch (error) {
-        return reply.code(409).send({ message: error.message });
-    }
-
-    // app.log.error(error);
-    // return reply.code(500).send({ message: 'Erro interno do servidor' });
-});
+app.post('/register', { schema: registroSchema }, userController.register.bind(userController));
 
 // Rota de login de usuário
 app.post('/login', { schema: loginSchema }, async (request, reply) => {
