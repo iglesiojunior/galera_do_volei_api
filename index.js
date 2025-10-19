@@ -1,9 +1,11 @@
 import fastify from "fastify";
 import { registroSchema, loginSchema, partidaSchema, conviteSchema } from "./schemas.js";
-import { registerUser, loginUser, listUsers, listAllUsers, createMatch, listMatches, getMatchById } from "./src/domain/user-service.js";
+import { registerUser, loginUser, listUsers, listAllUsers, createMatch, listMatches, getMatchById } from "./src/domain/user.service.js";
 import { RegisterUserUseCase } from "./src/application/use-cases/RegisterUserUseCase.js";
 import { UserRepository } from "./src/infrastructure/repositories/user-repository.js";
-import { UserController } from "./src/presentation/controllers/user-controller.js";
+import { RegisterController } from "./src/presentation/controllers/user-controller.js";
+import { LoginController } from "./src/presentation/controllers/LoginController.js";
+import { LoginUserUseCase } from "./src/application/use-cases/LoginUserUseCase.js";
 
 const convitesMock = [
     { id: 1, partidaId: 1, jogadorConvidadoId: 2, paiId: 1, status: 'pendente' }
@@ -11,27 +13,17 @@ const convitesMock = [
 
 const userRepository = new UserRepository();
 const registerUserUseCase = new RegisterUserUseCase(userRepository);
-const userController = new UserController(registerUserUseCase);
+const RegisterController = new RegisterController(registerUserUseCase);
+const loginUserUseCase = new LoginUserUseCase(userRepository);
+const LoginController = new LoginController(loginUserUseCase);
 
 const app = fastify({ logger: true });
 
 // Rota de registro de usuário
-app.post('/register', { schema: registroSchema }, userController.register.bind(userController));
+app.post('/register', { schema: registroSchema }, RegisterController.register.bind(RegisterController));
 
 // Rota de login de usuário
-app.post('/login', { schema: loginSchema }, async (request, reply) => {
-    try {
-        const { email, senha } = request.body;
-        const resultadoLogin = loginUser(email, senha);
-        if(resultadoLogin.token) {
-            return { token: resultadoLogin.token };
-        }else{
-            return reply.code(401).send({ message: 'Email ou senha inválidos!' });
-        }
-    } catch(error) {
-        app.log.error(error);
-        return reply.code(500).send({ message: 'Erro interno do servidor' });        
-}});
+app.post('/login', {schema: loginSchema }, LoginController.login.bind(LoginController));
 
 // Rota para listar jogadores com filtros
 app.get('/jogadores', async (request, reply) => {

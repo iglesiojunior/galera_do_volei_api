@@ -7,7 +7,7 @@ export class RegisterUserUseCase {
     execute(user) {
         const existingUser = this.userRepository.findByEmail(user.email);
         if (existingUser) {
-            throw new Error('Email already in use');
+            throw new Error('Email em uso!');
         }
         return this.userRepository.save(user);
 
