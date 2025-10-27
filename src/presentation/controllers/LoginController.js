@@ -1,18 +1,18 @@
-import { LoginUserUseCase } from "../../application/comands/LoginUserUseCase";
-import { UserRepository } from "../../infrastructure/repositories/user-repository";
+import { LoginUserUseCase } from "../../application/commands/LoginUserUseCase.js";
+import { UserRepository } from "../../infrastructure/repositories/user-repository.js";
 
 export class LoginController {
     constructor(loginController){
         this.loginUserUseCase = loginController;
     }
 
-    async login(request, reply){
+    async login(req, res){
         try{
-            const { email, senha } = request.body;
+            const { email, senha } = req.body;
             const result = await this.loginUserUseCase.execute(email, senha);
-            return reply.code(200).send(result);
+            return res.status(200).json(result);
         }catch(error){
-            return reply.code(401).send({ message: error.message });
+            return res.status(401).json({ message: error.message });
         }
     }
 }

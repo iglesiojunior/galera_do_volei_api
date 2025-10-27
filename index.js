@@ -15,7 +15,7 @@ const userRepository = new UserRepository();
 const registerUserUseCase = new RegisterUserUseCase(userRepository);
 const RegisterController = new RegisterController(registerUserUseCase);
 const loginUserUseCase = new LoginUserUseCase(userRepository);
-const LoginController = new LoginController(loginUserUseCase);
+const loginController = new LoginController(loginUserUseCase);
 
 const app = fastify({ logger: true });
 
