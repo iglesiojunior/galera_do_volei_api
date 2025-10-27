@@ -1,19 +1,18 @@
-import { RegisterUserUseCase } from "../../application/comands/RegisterUserUseCase.js";
+import { RegisterUserUseCase } from "../../application/commands/RegisterUserUseCase.js";
 import { UserRepository } from "../../infrastructure/repositories/user-repository.js";
 
 
 export class RegisterController {
-    constructor(registerUserUseCase, loginUserUseCase) {
-        this.registerUserUseCase = RegisterUserUseCase;
-        this.loginUserUseCase = LoginUserUseCase;
+    constructor(registerUserUseCase) {
+        this.registerUserUseCase = registerUserUseCase;
     } 
 
-    async register(request, reply){
+    async register(req, res){
         try{
-            const novoUsuario = await this.registerUserUseCase.execute(request.body);
-            return reply.code(201).send({ message: 'Usuário registrado com sucesso!', user: novoUsuario });
+            const novoUsuario = await this.registerUserUseCase.execute(req.body);
+            return res.status(201).json({ message: 'Usuário registrado com sucesso!', user: novoUsuario });
         }catch(error){
-        return reply.code(409).send({ message: error.message });
+        return res.status(409).json({ message: error.message });
     }
 
 }
